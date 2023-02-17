@@ -38,7 +38,7 @@ async function makeRequest(url) {
 async function main() {
     const data = await fetch(`https://Proxy.minecoolyt.repl.co?url=https://data.ninjakiwi.com/btd6/races/`);
     const json = await data.json();
-    makeRequest(json.body[0].leaderboard);
+    makeRequest(json.body.filter(event => event.start < Date.now())[0].leaderboard);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
