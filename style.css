@@ -22,7 +22,7 @@ header {
 }
 
 .label {
-    margin: 0 5%;
+    margin: 0 3%;
 }
 
 .leaderboard {
@@ -42,12 +42,12 @@ header {
 
 .rank {
     position: absolute;
-    padding-left: 2%;
+    padding-left: 5%;
 }
 
 .name {
     position: absolute;
-    padding-left: 10%;
+    padding-left: 15%;
 }
 
 .badges {
@@ -58,4 +58,9 @@ header {
 .time {
     position: absolute;
     padding-left: 50%;
+}
+
+.playerCount {
+    float: right;
+    /* margin: 5px; */
 }

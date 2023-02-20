@@ -24,7 +24,7 @@ async function addPlayer(nameArg, timeArg) {
     document.querySelector('.leaderboard').appendChild(placement);
 }
 async function makeRequest(url) {
-    const data = await fetch(`https://Proxy.minecoolyt.repl.co?url=${url}`);
+    const data = await fetch(url);
     const json = await data.json();
     const body = json.body;
     for (i = 0; i < body.length; i++) {
@@ -36,9 +36,11 @@ async function makeRequest(url) {
 }
 
 async function main() {
-    const data = await fetch(`https://Proxy.minecoolyt.repl.co?url=https://data.ninjakiwi.com/btd6/races/`);
+    const data = await fetch(`https://data.ninjakiwi.com/btd6/races/`);
     const json = await data.json();
-    makeRequest(json.body.filter(event => event.start < Date.now())[0].leaderboard);
+    const currentRace = json.body.filter(event => event.start < Date.now())[0];
+    document.querySelector(".playerCount").innerText = `${currentRace.totalScores}\nTotal\nPlayers`;
+    makeRequest(currentRace.leaderboard);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
