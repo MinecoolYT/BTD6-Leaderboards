@@ -23,26 +23,70 @@ async function addPlayer(nameArg, timeArg) {
 
     document.querySelector('.leaderboard').appendChild(placement);
 }
-async function makeRequest(url) {
+async function makeRequest(url, format) {
     const data = await fetch(url);
     const json = await data.json();
     const body = json.body;
-    for (i = 0; i < body.length; i++) {
-        addPlayer(body[i].displayName, new Date(body[i].score).toISOString().slice(14, 23))
+    if (format) {
+        for (i = 0; i < body.length; i++) {
+            addPlayer(body[i].displayName, new Date(body[i].score).toISOString().slice(14, 23))
+        }
+    } else {
+        for (i = 0; i < body.length; i++) {
+            addPlayer(body[i].displayName, body[i].score)
+        }
     }
     if (json.next) {
         await makeRequest(json.next);
+    } else {
+        loading = false;
     }
 }
 
-async function main() {
-    const data = await fetch(`https://data.ninjakiwi.com/btd6/races/`);
+async function main(url, totalKey, leaderboardKey, format) {
+    loading = true;
+    const data = await fetch(url);
     const json = await data.json();
-    const currentRace = json.body.filter(event => event.start < Date.now())[0];
-    document.querySelector(".playerCount").innerText = `${currentRace.totalScores}\nTotal\nPlayers`;
-    makeRequest(currentRace.leaderboard);
+    const currentLeaderboard = json.body.filter(event => event.start < Date.now())[0];
+    document.querySelector(".playerCount").innerText = `${currentLeaderboard[totalKey]}\nTotal\nEntries`;
+    makeRequest(currentLeaderboard[leaderboardKey], format);
 }
 
+let prevButton = null;
+let loading = false;
+
 document.addEventListener('DOMContentLoaded', function () {
-    main();
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (loading) return alert('Please refresh the page or wait for the current leaderboard to finish before switching to another one.');
+            document.getElementsByClassName('leaderboard')[0].innerHTML = ''
+            if (prevButton !== null) prevButton.style.backgroundColor = '';
+            prevButton = button;
+            button.style.backgroundColor = 'yellow';
+            document.getElementsByClassName('label')[1].innerText = 'Player Name';
+            document.getElementsByClassName('label')[6].innerText = 'Best Time';
+            switch (button.id) {
+                case 'race':
+                    main('https://data.ninjakiwi.com/btd6/races', 'totalScores', 'leaderboard', true);
+                    break;
+                case 'normalboss':
+                    main('https://data.ninjakiwi.com/btd6/bosses', 'totalScores_standard', 'leaderboard_standard_players_1', true);
+                    break;
+                case 'eliteboss':
+                    main('https://data.ninjakiwi.com/btd6/bosses', 'totalScores_elite', 'leaderboard_elite_players_1', true);
+                    break;
+                case 'ctplayers':
+                    document.getElementsByClassName('label')[6].innerText = 'Score';
+                    main('https://data.ninjakiwi.com/btd6/ct', 'totalScores_player', 'leaderboard_player', false);
+                    break;
+                case 'ctteams':
+                    document.getElementsByClassName('label')[1].innerText = 'Team Name';
+                    document.getElementsByClassName('label')[6].innerText = 'Score';
+                    main('https://data.ninjakiwi.com/btd6/ct', 'totalScores_team', 'leaderboard_team', false);
+                    break;
+            }
+        });
+    });
+    // main();
 })
