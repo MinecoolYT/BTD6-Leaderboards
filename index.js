@@ -37,7 +37,7 @@ async function makeRequest(url, format) {
         }
     }
     if (json.next) {
-        await makeRequest(json.next);
+        await makeRequest(json.next, format);
     } else {
         loading = false;
     }
