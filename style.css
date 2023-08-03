@@ -69,6 +69,7 @@ header {
     position: fixed;
     right: 0px;
     top: 200px;
+    font-size: 80%;
 }
 
 .timeLeft {
