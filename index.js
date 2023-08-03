@@ -81,9 +81,11 @@ async function makeRequest(url) {
 async function fetchSpecificWeek(availableLeaderboards, totalScoresKey, leaderboardKey) {
     const currentLeaderboard = availableLeaderboards.filter(event => event.start < Date.now())[0];
     // handleFlagTime(currentLeaderboard, leaderboardKey);
-    if (currentLeaderboard.end - Date.now() <= 0) document.querySelector(".timeLeft").style.display = "none";
-    document.querySelector(".timeLeft").innerText = `Event Ends in:\n${new Date(currentLeaderboard.end - Date.now()).toISOString().slice(11, 19)}`;
-    document.querySelector(".playerCount").innerText = `${currentLeaderboard[totalScoresKey]}\nTotal\nEntries`;
+    if (currentLeaderboard.end - Date.now() >= 0) document.querySelector(".timeLeft").style.display = "block";
+    console.log(currentLeaderboard.end);
+    const endTimeInMilliseconds = new Date(currentLeaderboard.end - Date.now());
+    document.querySelector(".timeLeft").innerText = `Event Ends in:\n${endTimeInMilliseconds > 86400000 ? Math.floor(endTimeInMilliseconds / 3600000) + " Hours" : endTimeInMilliseconds.toISOString().slice(11, 19)}`;
+    document.querySelector(".playerCount").innerText = `${currentLeaderboard[totalScoresKey]} \nTotal\nEntries`;
     makeRequest(currentLeaderboard[leaderboardKey]);
 }
 
@@ -92,7 +94,6 @@ async function main(url, totalScoresKey, leaderboardKey) {
     const json = await data.json();
     const availableLeaderboards = json.body;
     fetchSpecificWeek(availableLeaderboards, totalScoresKey, leaderboardKey);
-
 }
 
 document.addEventListener('DOMContentLoaded', function () {

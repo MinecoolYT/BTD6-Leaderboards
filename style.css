@@ -82,6 +82,7 @@ header {
     border-width: 1px;
     border-style: solid;
     padding: 10px;
+    display: none;
 }
 
 .buttons {
