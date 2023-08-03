@@ -75,7 +75,7 @@ async function makeRequest(url) {
             addPlayer(body[i].displayName, body[i].score);
         }
     }
-    // if (json.next) await makeRequest(json.next);
+    if (json.next) await makeRequest(json.next);
 }
 
 async function fetchSpecificWeek(availableLeaderboards, totalScoresKey, leaderboardKey) {
