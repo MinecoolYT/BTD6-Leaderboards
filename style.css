@@ -7,11 +7,14 @@ body {
 }
 
 header {
-    margin: auto;
     width: 80%;
+    white-space: nowrap;
     text-align: center;
-    display: flex;
-    justify-content: center;
+}
+
+.label {
+    margin: 1.0em;
+    display: inline;
 }
 
 .banner {
@@ -21,47 +24,64 @@ header {
     display: flex;
 }
 
-.label {
-    margin: 0 3%;
-}
-
 .leaderboard {
-    margin: 5% auto;
-    width: 70%;
+    width: 80%;
+    position: absolute;
+    left: 15%;
 }
 
 .placement {
     height: 100px;
+    width: 90%;
     background-color: #588cd5;
     border-radius: 25px;
     border: 1px solid #2d5580;
-    margin: 0.05%;
-    display: flex;
-    align-items: center;
+    position: relative;
 }
 
 .rank {
     position: absolute;
-    padding-left: 5%;
+    left: 50px;
+    top: 25%;
 }
 
 .name {
     position: absolute;
-    padding-left: 15%;
+    left: 150px;
+    top: 25%;
 }
 
-.badges {
+.primaryScore {
     position: absolute;
-    padding-left: 40%;
+    right: 50px;
+    top: 25%;
 }
 
-.time {
+.secondaryScore {
     position: absolute;
-    padding-left: 50%;
+    right: 20px;
+    top: 70%;
+    font-size: 50%;
+    -webkit-text-stroke: 1px black;
 }
 
 .playerCount {
-    float: right;
+    position: fixed;
+    right: 0px;
+    top: 200px;
+}
+
+.timeLeft {
+    position: fixed;
+    right: 0px;
+    top: 50px;
+    font-size: 60%;
+    text-align: center;
+    background-color: #00AFFF;
+    border-color: #00AAFF;
+    border-width: 1px;
+    border-style: solid;
+    padding: 10px;
 }
 
 .buttons {
@@ -72,7 +92,7 @@ header {
     font-family: Luckiest Guy;
     border-radius: 10px;
     background-color: cyan;
-    width: 15%;
+    width: 250px;
     color: white;
-    font-size: 60%;
+    font-size: 0.8em;
 }
