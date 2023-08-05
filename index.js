@@ -77,8 +77,8 @@ async function makeRequest(url) {
         }
     }
     if (json.next) return await makeRequest(json.next);
-    console.table(fullData);
-    console.info("%cFull Raw Data for your Convenience :)", "font-size: 50px; color:red");
+    console.info(fullData);
+    console.info("%cFull Raw Data for your Convenience :)", "font-size: 30px; color:red");
 }
 
 let fullData = [];
