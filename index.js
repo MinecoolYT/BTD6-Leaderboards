@@ -61,6 +61,7 @@ async function makeRequest(url) {
     const data = await fetch(url);
     const json = await data.json();
     const body = json.body;
+    fullData.push(...body);
     if (body[0].scoreParts?.[0].type === "number") {
         for (i = 0; i < body.length; i++) {
             addPlayer(body[i].displayName, body[i].score, body[0].scoreParts[0].name, new Date(body[i].scoreParts[1].score).toISOString().slice(14, 23));
@@ -75,17 +76,21 @@ async function makeRequest(url) {
             addPlayer(body[i].displayName, body[i].score);
         }
     }
-    if (json.next) await makeRequest(json.next);
+    if (json.next) return await makeRequest(json.next);
+    console.table(fullData);
+    console.info("%cFull Raw Data for your Convenience :)", "font-size: 50px; color:red");
 }
 
+let fullData = [];
+
 async function fetchSpecificWeek(availableLeaderboards, totalScoresKey, leaderboardKey) {
-    const currentLeaderboard = availableLeaderboards.filter(event => event.start < Date.now())[0];
+    const currentLeaderboard = availableLeaderboards.filter(event => event.name == new URLSearchParams(window.location.search).get('week'))[0] || availableLeaderboards.filter(event => event.start < Date.now())[0];
     // handleFlagTime(currentLeaderboard, leaderboardKey);
     if (currentLeaderboard.end - Date.now() >= 0) document.querySelector(".timeLeft").style.display = "block";
-    console.log(currentLeaderboard.end);
     const endTimeInMilliseconds = new Date(currentLeaderboard.end - Date.now());
     document.querySelector(".timeLeft").innerText = `Event Ends in:\n${endTimeInMilliseconds > 86400000 ? Math.floor(endTimeInMilliseconds / 3600000) + " Hours" : endTimeInMilliseconds.toISOString().slice(11, 19)}`;
     document.querySelector(".playerCount").innerText = `${currentLeaderboard[totalScoresKey]} \nTotal\nEntries`;
+    fullData = [];
     makeRequest(currentLeaderboard[leaderboardKey]);
 }
 
