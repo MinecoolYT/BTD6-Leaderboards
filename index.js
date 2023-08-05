@@ -78,13 +78,29 @@ async function makeRequest(url) {
     }
     if (json.next) return await makeRequest(json.next);
     console.info(fullData);
-    console.info("%cFull Raw Data for your Convenience :)", "font-size: 30px; color:red");
+    console.info("%cFull Raw Data for your Convenience :)", "font-size: 20px; color:red");
 }
 
 let fullData = [];
 
 async function fetchSpecificWeek(availableLeaderboards, totalScoresKey, leaderboardKey) {
-    const currentLeaderboard = availableLeaderboards.filter(event => event.name == new URLSearchParams(window.location.search).get('week'))[0] || availableLeaderboards.filter(event => event.start < Date.now())[0];
+    const selectedWeek = new URLSearchParams(window.location.search).get('week');
+    const currentLeaderboard = availableLeaderboards.filter(event => event.name == selectedWeek)[0] || availableLeaderboards.filter(event => event.id == selectedWeek)[0] || availableLeaderboards.filter(event => event.start < Date.now())[0];
+
+    if (!(availableLeaderboards.filter(event => event.id == selectedWeek).length || availableLeaderboards.filter(event => event.name == selectedWeek).length) && selectedWeek) {
+        const warningMessage = document.createElement('div');
+        warningMessage.textContent = "You did not enter a valid week. Click to default to current week";
+        warningMessage.style.textAlign = "center";
+        warningMessage.addEventListener("click", () => {
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
+            params.set("week", availableLeaderboards.filter(event => event.start < Date.now())[0].id)
+            window.location.href = url.origin + url.pathname + '?' + params.toString();
+        })
+        document.querySelector('.leaderboard').appendChild(warningMessage);
+        return;
+    }
+
     // handleFlagTime(currentLeaderboard, leaderboardKey);
     if (currentLeaderboard.end - Date.now() >= 0) document.querySelector(".timeLeft").style.display = "block";
     const endTimeInMilliseconds = new Date(currentLeaderboard.end - Date.now());
