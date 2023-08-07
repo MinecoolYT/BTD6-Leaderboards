@@ -25,36 +25,35 @@ header {
 }
 
 .leaderboard {
-    width: 80%;
-    position: absolute;
-    left: 15%;
+    width: 70%;
+    margin: auto;
 }
 
 .placement {
     height: 100px;
-    width: 90%;
     background-color: #588cd5;
     border-radius: 25px;
     border: 1px solid #2d5580;
     position: relative;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
 }
 
 .rank {
-    position: absolute;
-    left: 50px;
-    top: 25%;
+    margin: 50px;
 }
 
 .name {
-    position: absolute;
-    left: 150px;
-    top: 25%;
+    margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .primaryScore {
-    position: absolute;
-    right: 50px;
-    top: 25%;
+    margin-left: auto;
+    margin-right: 50px;
 }
 
 .secondaryScore {
