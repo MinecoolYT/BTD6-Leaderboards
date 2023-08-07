@@ -24,6 +24,11 @@ async function handleFlagTime(leaderboard, leaderboardKey) {
 }
 */
 
+function removeLeadingHour(formattedTime) {
+    if (formattedTime.startsWith("00:")) return formattedTime.slice(3);
+    return formattedTime;
+}
+
 async function addPlayer(nameArg, primaryScore, primaryScoreType, secondaryScore) {
     const placement = document.createElement('div');
     const rank = document.createElement('div');
@@ -64,12 +69,12 @@ async function makeRequest(url) {
     fullData.push(...body);
     if (body[0].scoreParts?.[0].type === "number") {
         for (i = 0; i < body.length; i++) {
-            addPlayer(body[i].displayName, body[i].score, body[0].scoreParts[0].name, new Date(body[i].scoreParts[1].score).toISOString().slice(14, 23));
+            addPlayer(body[i].displayName, body[i].score, body[0].scoreParts[0].name, removeLeadingHour(new Date(body[i].scoreParts[1].score).toISOString().slice(11, 23)));
         }
     }
     else if (format) {
         for (i = 0; i < body.length; i++) {
-            addPlayer(body[i].displayName, new Date(body[i].score).toISOString().slice(14, 23));
+            addPlayer(body[i].displayName, removeLeadingHour(new Date(body[i].score).toISOString().slice(11, 23)));
         }
     } else {
         for (i = 0; i < body.length; i++) {
