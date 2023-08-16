@@ -97,3 +97,7 @@ header {
     color: white;
     font-size: 0.8em;
 }
+
+a {
+    display: none;
+}

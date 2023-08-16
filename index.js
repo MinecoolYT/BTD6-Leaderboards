@@ -62,7 +62,7 @@ async function addPlayer(nameArg, primaryScore, primaryScoreType, secondaryScore
     document.querySelector('.leaderboard').appendChild(placement);
 }
 
-async function makeRequest(url) {
+async function makeRequest(url, key) {
     const data = await fetch(url);
     const json = await data.json();
     const body = json.body;
@@ -81,8 +81,21 @@ async function makeRequest(url) {
             addPlayer(body[i].displayName, body[i].score);
         }
     }
-    if (json.next) return await makeRequest(json.next);
-    console.info(fullData);
+    if (json.next) return await makeRequest(json.next, key);
+    console.log(fullData);
+    const csv = fullData.map(json => {
+        try {
+            json.scoreParts.forEach(scorePart => {
+                json[scorePart.name] = scorePart.score;
+            });
+            delete json.scoreParts;
+        } catch (err) { }
+        return Object.values(json).join(',');
+    })
+    const download = document.querySelector('a');
+    download.style.display = "block";
+    download.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(`${Object.keys(fullData[0]).join(',')}\r\n${csv.join('\r\n')}`));
+    download.setAttribute('download', `${key}.csv`);
     console.info("%cFull Raw Data for your Convenience :)", "font-size: 20px; color:red");
 }
 
@@ -112,7 +125,7 @@ async function fetchSpecificWeek(availableLeaderboards, totalScoresKey, leaderbo
     document.querySelector(".timeLeft").innerText = `Event Ends in:\n${endTimeInMilliseconds > 86400000 ? Math.floor(endTimeInMilliseconds / 3600000) + " Hours" : endTimeInMilliseconds.toISOString().slice(11, 19)}`;
     document.querySelector(".playerCount").innerText = `${currentLeaderboard[totalScoresKey]} \nTotal\nEntries`;
     fullData = [];
-    makeRequest(currentLeaderboard[leaderboardKey]);
+    makeRequest(currentLeaderboard[leaderboardKey], currentLeaderboard.id);
 }
 
 async function main(url, totalScoresKey, leaderboardKey) {
