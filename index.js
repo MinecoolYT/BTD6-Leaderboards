@@ -82,7 +82,8 @@ async function makeRequest(url, key) {
         }
     }
     if (json.next) return await makeRequest(json.next, key);
-    console.log(fullData);
+    console.log(structuredClone(fullData));
+    console.info("%cFull Raw Data for your Convenience :)", "font-size: 20px; color:red");
     const csv = fullData.map(json => {
         try {
             json.scoreParts.forEach(scorePart => {
@@ -96,7 +97,6 @@ async function makeRequest(url, key) {
     download.style.display = "block";
     download.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(`${Object.keys(fullData[0]).join(',')}\r\n${csv.join('\r\n')}`));
     download.setAttribute('download', `${key}.csv`);
-    console.info("%cFull Raw Data for your Convenience :)", "font-size: 20px; color:red");
 }
 
 let fullData = [];
